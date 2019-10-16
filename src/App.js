@@ -25,6 +25,17 @@ class App extends React.Component {
           user: aqui.props.user.id
         } 
       });
+      
+    }
+  }
+  componentDidMount(){
+    const aqui = this
+    if(this.props.user&& this.props.user.username){
+      console.log('actualizar')
+      this.socket.emit('conectar',{
+        username: this.props.user.username,
+        timestamp: this.props.last_update
+      })
       this.socket.on('mensaje', function(data){
         aqui.props.recieveMessage(data);
       }) 
@@ -34,8 +45,7 @@ class App extends React.Component {
         });
       }) 
     }
-  }
-  componentDidMount(){
+    
   }
   render() {
     if(this.props.user&& this.props.user.username){
@@ -64,7 +74,9 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => ({
   user: state.userReducer.user,
-  loading: state.userReducer.loading
+  loading: state.userReducer.loading,
+  last_update: state.chatsReducer.last_update,
+  chats: state.chatsReducer.data,
 });
 function bindAction(dispatch) {
   return {

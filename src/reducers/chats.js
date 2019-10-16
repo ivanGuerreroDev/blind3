@@ -49,7 +49,7 @@ export default function chatsReducer(state = initialState, action){
       var usuario2 = action.data.user;
       var mensaje2 = action.data;
       state.last_update = mensaje2.timestamp
-      if(state.data && state.data[usuario1]){
+      if(state.data && state.data[usuario2]){
         return {
           ...state, 
           data:{ ...state.data, [usuario2]: [...state.data[usuario2], mensaje2]},

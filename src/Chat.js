@@ -7,7 +7,7 @@ import { addChat } from "./actions/chats";
 import SlackMessage from './SlackMessage';
 import { connect } from "react-redux";
 import { fetchDataSuccess, fetchDataRequest, fetchDataError } from "./actions/user";
-import { addMessage } from "./actions/chats";
+import { addMessage, recieveMessage } from "./actions/chats";
 import moment from 'moment';
 
 const io = require('socket.io-client');
@@ -41,16 +41,53 @@ class Chat extends React.Component {
       headerTintColor: '#fff'
     }
   };
-
+  static getDerivedStateFromProps(props, state) {
+    props.chats[state.to].forEach((element, i) => {
+      var id = 1; var user = props.user.username;
+      if(element.user != user){ id = 2; user = state.to }
+      state.messages[i] = {
+        _id: i,
+        text: element.text,
+        createdAt: element.timestamp,
+        user:{
+          _id: id,
+          name: user,
+        }
+      };
+    });
+    return{
+      messages: state.messages
+    }
+  }
   componentDidMount() {
-    
+    const aqui = this
+    if(this.props.chats&&this.props.chats[this.state.to]){
+      var mensajes = this.props.chats[this.state.to]
+      if(mensajes){
+        this._renderMensajes(mensajes);
+      }
+      this.socket.emit('conectar',{
+        username: this.props.user.username,
+        timestamp: this.props.last_update
+      })
+      this.socket.on('mensaje', function(data){
+        aqui.props.recieveMessage(data);
+      }) 
+      this.socket.on('actualizacion', function(data){
+        data.forEach(element => {
+          aqui.props.recieveMessage(element);
+        });
+      }) 
+    }
+   
+  }
+  componentWillReceiveProps(){
     if(this.props.chats&&this.props.chats[this.state.to]){
       var mensajes = this.props.chats[this.state.to]
       if(mensajes){
         this._renderMensajes(mensajes);
       }
     }
-   
   }
   _renderMensajes(mensajes){
     mensajes.forEach((element, i) => {
@@ -66,6 +103,7 @@ class Chat extends React.Component {
         }
       };
     });
+    console.log(this.state.messages)
     this.setState({refresh: true})
   }
   onSend(messages = []) {
@@ -116,15 +154,15 @@ class Chat extends React.Component {
   render() {
     return (
       <GiftedChat
+        inverted={false}
         messages={this.state.messages}
         placeholder='Escribe un mensaje'
         onSend={messages => this.onSend(messages)}
         user={{
-          _id: 1,
+          _id: 1
         }}
-        renderMessage={this.renderMessage}
+        //renderMessage={this.renderMessage}
         renderSend={this.renderSend}
-        inverted={true}
       />
     );
   }
@@ -133,13 +171,15 @@ class Chat extends React.Component {
 function bindAction(dispatch) {
   return {
     fetchDataUser: user => dispatch(fetchDataSuccess(user)),
-    addMessage: data => dispatch(addMessage(data))
+    addMessage: data => dispatch(addMessage(data)),
+    recieveMessage: data => dispatch(recieveMessage(data)),
   };
 }
 
 const mapStateToProps = state => ({
   user: state.userReducer.user,
-  chats: state.chatsReducer.data
+  chats: state.chatsReducer.data,
+  last_update: state.chatsReducer.last_update,
 });
 export default connect(
   mapStateToProps,

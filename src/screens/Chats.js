@@ -2,9 +2,10 @@ import React, {Component} from 'react';
 import { Text, View, TouchableOpacity, Image, ScrollView, AsyncStorage  } from 'react-native';
 import { connect } from "react-redux";
 import { fetchDataSuccess, fetchDataRequest, fetchDataError } from "../actions/user";
-import { addMessage,deleteChat } from "../actions/chats";
+import { addMessage,deleteChat, recieveMessage } from "../actions/chats";
 import AddChatButton from "../components/AddChatButton";
 var moment = require('moment');
+const io = require('socket.io-client');
 var server = require('../config')
 import 'moment/locale/es';
 
@@ -15,6 +16,15 @@ class ChatsScreen extends React.Component {
       chats: {}
     };
     this.renderChats = this.renderChats.bind(this);
+    const aqui = this
+    this.socket = io(server.socket,{
+      transports: ['websocket'],
+      path: '/chat',
+      query: {
+        id: aqui.props.user.username,
+        user: aqui.props.user.id
+      } 
+    });
   }
   static getDerivedStateFromProps(props, state) {
     return{
@@ -22,7 +32,20 @@ class ChatsScreen extends React.Component {
     }
   }
   componentDidMount(){
+    const aqui = this
     this.setState({chats: this.props.chats})
+    this.socket.emit('conectar',{
+      username: this.props.user.username,
+      timestamp: this.props.last_update
+    })
+    this.socket.on('mensaje', function(data){
+      aqui.props.recieveMessage(data);
+    }) 
+    this.socket.on('actualizacion', function(data){
+      data.forEach(element => {
+        aqui.props.recieveMessage(element);
+      });
+    }) 
   }
   renderChats(){
     var chats = this.state.chats;
@@ -94,6 +117,7 @@ function bindAction(dispatch) {
   return {
     fetchDataUser: user => dispatch(fetchDataSuccess(user)),
     addMessage: data => dispatch(addMessage(data)),
+    recieveMessage: data => dispatch(recieveMessage(data)),
     deleteChat: data => dispatch(deleteChat(data))
   };
 }
