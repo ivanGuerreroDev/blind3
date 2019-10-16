@@ -1,0 +1,14 @@
+{
+  "chats":[
+    {
+      "_id": 1,
+      "nombre": "Ivan Guerrero",
+      "avatar": "https://facebook.github.io/react/img/logo_og.png"
+    },
+    {
+      "_id": 2,
+      "nombre": "Ivan Guerrero2",
+      "avatar": "https://facebook.github.io/react/img/logo_og.png"
+    }
+  ]
+}
