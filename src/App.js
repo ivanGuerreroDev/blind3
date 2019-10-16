@@ -52,7 +52,11 @@ class App extends React.Component {
     if(this.props.user&& this.props.user.username){
       return (
         <View style={styles.container}>
-          <AppNavigator />
+          <AppNavigator 
+            screenProps={{
+              sendMessage: (mensaje)=> this.socket.emit('enviar', mensaje)
+            }}
+          />
         </View>        
       );
     }else{

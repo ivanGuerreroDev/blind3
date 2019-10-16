@@ -17,7 +17,6 @@ export default function chatsReducer(state = initialState, action){
     case ADD_MESSAGE:
       var usuario1 = action.data.to;
       var mensaje1 = action.data;
-      state.last_update = mensaje1.timestamp
       if(state.data && state.data[usuario1]){
         return {
           ...state, 
@@ -29,7 +28,8 @@ export default function chatsReducer(state = initialState, action){
               last_message: mensaje1.text,
               last_message_date: mensaje1.timestamp
             }
-          }
+          },
+          last_update: mensaje1.timestamp
         }
       }else{
         return {
@@ -42,14 +42,13 @@ export default function chatsReducer(state = initialState, action){
               last_message: mensaje1.text,
               last_message_date: mensaje1.timestamp
             }
-          }
+          },
+          last_update: mensaje1.timestamp
         }
       }
     case RECIEVE_MESSAGE:
       var usuario2 = action.data.user;
       var mensaje2 = action.data;
-      console.log(mensaje2)
-      state.last_update = mensaje2.timestamp
       if(state.data && state.data[usuario2]){
         return {
           ...state, 
@@ -61,7 +60,8 @@ export default function chatsReducer(state = initialState, action){
               last_message: mensaje2.text,
               last_message_date: mensaje2.timestamp
             }
-          }
+          },
+          last_update: mensaje2.timestamp
         }
       }else{
         return {

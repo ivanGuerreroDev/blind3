@@ -9,7 +9,6 @@ import { connect } from "react-redux";
 import { fetchDataSuccess, fetchDataRequest, fetchDataError } from "./actions/user";
 import { addMessage, recieveMessage } from "./actions/chats";
 import moment from 'moment';
-
 const io = require('socket.io-client');
 var server = require('./config')
 
@@ -97,7 +96,7 @@ class Chat extends React.Component {
       timestamp: moment().utc().valueOf()
     };
     this.props.addMessage(mensaje)
-    this.socket.emit('enviar', mensaje);
+    this.props.screenProps.sendMessage(mensaje);
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }))
