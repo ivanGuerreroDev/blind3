@@ -48,6 +48,7 @@ export default function chatsReducer(state = initialState, action){
     case RECIEVE_MESSAGE:
       var usuario2 = action.data.user;
       var mensaje2 = action.data;
+      console.log(mensaje2)
       state.last_update = mensaje2.timestamp
       if(state.data && state.data[usuario2]){
         return {

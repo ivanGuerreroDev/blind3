@@ -26,9 +26,6 @@ class Ajustes extends React.Component {
         <TouchableOpacity style={styles.listItem}>
           <Text>Notificaciones</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.listItem}>
-          <Text>Invitar amigos</Text>
-        </TouchableOpacity>
         <TouchableOpacity style={styles.listItem}
           onPress={()=>this._logout()}
         >

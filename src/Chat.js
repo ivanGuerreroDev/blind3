@@ -23,14 +23,6 @@ class Chat extends React.Component {
     };
     
     const aqui = this
-    this.socket = io(server.socket,{
-      transports: ['websocket'],
-      path: '/chat',
-      query: {
-        id: aqui.props.user.username,
-        user: aqui.props.user.id
-      } 
-    });
   }
   static navigationOptions = ({ navigation })=>{
     return {
@@ -42,22 +34,25 @@ class Chat extends React.Component {
     }
   };
   static getDerivedStateFromProps(props, state) {
-    props.chats[state.to].forEach((element, i) => {
-      var id = 1; var user = props.user.username;
-      if(element.user != user){ id = 2; user = state.to }
-      state.messages[i] = {
-        _id: i,
-        text: element.text,
-        createdAt: element.timestamp,
-        user:{
-          _id: id,
-          name: user,
-        }
-      };
-    });
-    return{
-      messages: state.messages
+    if(props.chats&&props.chats[state.to]){
+      props.chats[state.to].forEach((element, i) => {
+        var id = 1; var user = props.user.username;
+        if(element.user != user){ id = 2; user = state.to }
+        state.messages[i] = {
+          _id: i,
+          text: element.text,
+          createdAt: element.timestamp,
+          user:{
+            _id: id,
+            name: user,
+          }
+        };
+      });
+      return{
+        messages: state.messages
+      }
     }
+    
   }
   componentDidMount() {
     const aqui = this
@@ -66,18 +61,6 @@ class Chat extends React.Component {
       if(mensajes){
         this._renderMensajes(mensajes);
       }
-      this.socket.emit('conectar',{
-        username: this.props.user.username,
-        timestamp: this.props.last_update
-      })
-      this.socket.on('mensaje', function(data){
-        aqui.props.recieveMessage(data);
-      }) 
-      this.socket.on('actualizacion', function(data){
-        data.forEach(element => {
-          aqui.props.recieveMessage(element);
-        });
-      }) 
     }
    
   }

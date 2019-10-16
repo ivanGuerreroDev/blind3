@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Text, View, TouchableOpacity, Image, ScrollView, AsyncStorage  } from 'react-native';
+import { Text, View, TouchableOpacity, Image, ScrollView, Alert  } from 'react-native';
 import { connect } from "react-redux";
 import { fetchDataSuccess, fetchDataRequest, fetchDataError } from "../actions/user";
 import { addMessage,deleteChat, recieveMessage } from "../actions/chats";
@@ -17,14 +17,6 @@ class ChatsScreen extends React.Component {
     };
     this.renderChats = this.renderChats.bind(this);
     const aqui = this
-    this.socket = io(server.socket,{
-      transports: ['websocket'],
-      path: '/chat',
-      query: {
-        id: aqui.props.user.username,
-        user: aqui.props.user.id
-      } 
-    });
   }
   static getDerivedStateFromProps(props, state) {
     return{
@@ -34,18 +26,6 @@ class ChatsScreen extends React.Component {
   componentDidMount(){
     const aqui = this
     this.setState({chats: this.props.chats})
-    this.socket.emit('conectar',{
-      username: this.props.user.username,
-      timestamp: this.props.last_update
-    })
-    this.socket.on('mensaje', function(data){
-      aqui.props.recieveMessage(data);
-    }) 
-    this.socket.on('actualizacion', function(data){
-      data.forEach(element => {
-        aqui.props.recieveMessage(element);
-      });
-    }) 
   }
   renderChats(){
     var chats = this.state.chats;
@@ -64,7 +44,10 @@ class ChatsScreen extends React.Component {
                 ()=>{
                   Alert.alert('¿Deseas eliminar la conversación?','',
                   [
-                    {text: 'Si', onPress: () => this.props.deleteChat(chat.usuario)},
+                    {text: 'Si', onPress: () => {
+                      this.props.deleteChat(chat.usuario);
+                      this.setState({refresh: true})
+                    }},
                     {text: 'No',style: 'cancel',},
                   ],
                     {cancelable: true},

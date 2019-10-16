@@ -31,7 +31,7 @@ class App extends React.Component {
   componentDidMount(){
     const aqui = this
     if(this.props.user&& this.props.user.username){
-      console.log('actualizar')
+      console.log('actualizar:', this.props.user.username, this.props.last_update )
       this.socket.emit('conectar',{
         username: this.props.user.username,
         timestamp: this.props.last_update
@@ -40,6 +40,7 @@ class App extends React.Component {
         aqui.props.recieveMessage(data);
       }) 
       this.socket.on('actualizacion', function(data){
+        console.log('recibiendi act', data)
         data.forEach(element => {
           aqui.props.recieveMessage(element);
         });
