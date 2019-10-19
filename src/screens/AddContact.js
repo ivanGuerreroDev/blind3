@@ -84,7 +84,6 @@ class AddContact extends React.Component {
         const email = this.state.email;
         const username = this.props.user.username
         var aqui = this;
-        console.log(username)
         fetch(server.host+'/api/findFriend/', {
             method: 'POST', 
             headers: {
@@ -117,7 +116,6 @@ class AddContact extends React.Component {
         })
         .then((response) => response.json())
         .then((res) => {
-            console.log(res)
             if(res.success){
                 this.setState({friend: false});
                 goBack();

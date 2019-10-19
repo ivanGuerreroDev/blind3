@@ -42,7 +42,7 @@ class ContactosScreen extends React.Component {
     if(this.state.friends!=null && this.state.friends!=null && Object.keys(this.state.friends).length > 0){
       for (var [key, contact] of Object.entries(this.state.friends)) {
         arr.push(
-          <TouchableOpacity 
+          <TouchableOpacity key={'contacto-'+key}
             style={{
               flexDirection: 'row', alignItems: 'center', paddingVertical: 20, paddingHorizontal: 15,
               borderBottomWidth: 1, borderBottomColor: '#f4f4f4'
@@ -74,7 +74,7 @@ class ContactosScreen extends React.Component {
     if(this.state.requests!=null && this.state.requests!=undefined && Object.keys(this.state.requests).length > 0){
       for (var [key, contact] of Object.entries(this.state.requests)) {
         arr.push(
-          <View key={key}
+          <View key={'request-'+key}
             style={{
               flexDirection: 'row', alignItems: 'center', paddingVertical: 20, paddingHorizontal: 15,
               borderBottomWidth: 1, borderBottomColor: '#f4f4f4'
@@ -128,7 +128,6 @@ class ContactosScreen extends React.Component {
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      console.log(responseJson)
       if(responseJson.success){
         this._refresh();
       }
@@ -169,7 +168,6 @@ class ContactosScreen extends React.Component {
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      console.log(responseJson)
       if(responseJson.success){
         
         this.setState({requests: responseJson.requests})

@@ -34,7 +34,7 @@ class ChatsScreen extends React.Component {
       if(Object.keys(chats).length > 0){ 
         for (var [key, chat] of Object.entries(chats)) {
           chatComponents.push(
-            <TouchableOpacity 
+            <TouchableOpacity key={'chat-'+key}
               style={{
                 flexDirection: 'row', alignItems: 'center', paddingVertical: 20, paddingHorizontal: 15,
                 borderBottomWidth: 1, borderBottomColor: '#f4f4f4'

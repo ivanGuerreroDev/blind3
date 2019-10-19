@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ActivityIndicator} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ActivityIndicator, AppState} from 'react-native';
 import { connect } from "react-redux";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { fetchDataSuccess, fetchDataRequest, fetchDataError, updateAvatar, updateInfo } from "../actions/user";
@@ -22,6 +22,7 @@ class Perfil extends React.Component {
     loading: false
   }
   componentDidMount(){
+    AppState.removeEventListener('change', this._handleAppStateChange);
     this.setState({
       nombresyapellidos: this.props.user.nombresyapellidos
     })
@@ -32,10 +33,8 @@ class Perfil extends React.Component {
       const res = await DocumentPicker.pick({
         type: [DocumentPicker.types.images],
       });
-      console.log(res)
       this.uploadFile(res);
     } catch (err) {
-      console.log(err)
       this.setState({loading:false})
     }
   }
@@ -61,7 +60,6 @@ class Perfil extends React.Component {
       this.setState({loading:false})
     }).catch((err)=>{
       this.setState({loading:false});
-      console.log(err)
     })
   }
   updateProfile(){
@@ -90,7 +88,6 @@ class Perfil extends React.Component {
       }      
     }).catch((err)=>{
       aqui.setState({loading:false});
-      console.log(err)
     })
   }
   render() {

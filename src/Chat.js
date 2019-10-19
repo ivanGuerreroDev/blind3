@@ -85,7 +85,6 @@ class Chat extends React.Component {
         }
       };
     });
-    console.log(this.state.messages)
     this.setState({refresh: true})
   }
   onSend(messages = []) {

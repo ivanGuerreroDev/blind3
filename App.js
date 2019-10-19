@@ -4,7 +4,6 @@ import { Provider } from 'react-redux';
 import { PersistGate } from "redux-persist/integration/react";
 import configureStore from './src/configStore'
 const { persistor, store } = configureStore();
-console.log(store)
 
 export default class App extends React.Component {
   render() {

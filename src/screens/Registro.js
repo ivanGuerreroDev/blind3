@@ -50,7 +50,6 @@ class Registro extends React.Component {
     )
   }
   _confirmarCorreo(){
-    console.log(this.props.registro)
     return fetch(server.host+'/api/permission/', {
       method: 'POST',
       headers: {
@@ -63,7 +62,6 @@ class Registro extends React.Component {
       }),
     }).then((response) => response.json())
     .then((responseJson) => {
-      console.log(responseJson)
       if(responseJson.valid){
         this.props.navigation.navigate('ConfirmarCorreo');
       }else{

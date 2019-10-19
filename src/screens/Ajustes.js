@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import { connect } from "react-redux";
 
 import { fetchDataSuccess, fetchDataRequest, fetchDataError } from "../actions/user";
-
+import { deleteAll } from "../actions/chats";
 class Ajustes extends React.Component {
   static navigationOptions = {
     title: 'Ajustes',
@@ -35,7 +35,8 @@ class Ajustes extends React.Component {
     )
   }
 
-  _logout(){
+  _logout(){ 
+    this.props.deleteAll();
     this.props.fetchDataUser();
   }
 }
@@ -65,7 +66,8 @@ function bindAction(dispatch) {
   return {
     requestDataUser: user => dispatch(fetchDataRequest()),
     requestError: user => dispatch(fetchDataError()),
-    fetchDataUser: user => dispatch(fetchDataSuccess(user))
+    fetchDataUser: user => dispatch(fetchDataSuccess(user)),
+    deleteAll: user => dispatch(deleteAll())
   };
 }
 

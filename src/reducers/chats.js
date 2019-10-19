@@ -2,7 +2,8 @@ import moment from 'moment';
 import {
   DELETE_CHAT,
   RECIEVE_MESSAGE,
-  ADD_MESSAGE
+  ADD_MESSAGE,
+  DELETE_ALL_CHAT
 } from '../constants/action-types';
 const initialState = {
   data: {},
@@ -81,6 +82,13 @@ export default function chatsReducer(state = initialState, action){
         delete state.data[action.data];
         delete state.openeds[action.data];
       return state
+    case DELETE_ALL_CHAT:
+      return {
+        ...state,
+        data: {},
+        openeds: {},
+        last_update: false
+      }
     default:
       return state
   }
