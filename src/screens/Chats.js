@@ -55,7 +55,7 @@ class ChatsScreen extends React.Component {
                 }
               }
             >
-              <Image source={chat.avatar?chat.avatar:{uri: 'https://www.w3schools.com/w3images/avatar2.png'}} style={{
+              <Image source={chat.avatar?{uri: chat.avatar}:require('../assets/img/avatar2.png')} style={{
                   alignSelf: 'center', 
                   width: 60,
                   borderRadius: 300,

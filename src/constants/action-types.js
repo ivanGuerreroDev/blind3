@@ -5,3 +5,5 @@ export const DELETE_CHAT = 'DELETE_CHAT';
 export const ADD_MESSAGE = 'ADD_MESSAGE';
 export const RECIEVE_MESSAGE = 'RECIEVE_MESSAGE';
 export const SET_DATA_REGISTER = 'SET_DATA_REGISTER';
+export const UPDATE_AVATAR = 'UPDATE_AVATAR';
+export const UPDATE_INFO = 'UPDATE_INFO';

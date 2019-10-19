@@ -17,14 +17,14 @@ class Ajustes extends React.Component {
   render() {
     return (
       <View style={styles.content}>
-        <TouchableOpacity style={styles.listItem}>
+        <TouchableOpacity 
+          style={styles.listItem}
+          onPress={()=>this.props.navigation.navigate('Perfil')}>
           <Text>Perfil</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.listItem}>
+        <TouchableOpacity style={styles.listItem}
+          onPress={()=>this.props.navigation.navigate('CambiarContrasena')}>
           <Text>Cambiar contraseña</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.listItem}>
-          <Text>Notificaciones</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.listItem}
           onPress={()=>this._logout()}

@@ -49,7 +49,7 @@ class ContactosScreen extends React.Component {
             }}
             onPress={() => this.props.screenProps._goChat(contact.username)}
           >
-            <Image source={contact.avatar?contact.avatar:{uri: 'https://www.w3schools.com/w3images/avatar2.png'}} style={{
+            <Image source={contact.avatar?{uri: contact.avatar}:require('../assets/img/avatar2.png')} style={{
                 alignSelf: 'center', 
                 width: 60,
                 borderRadius: 300,
@@ -58,7 +58,7 @@ class ContactosScreen extends React.Component {
                 marginRight: 10,
             }}/>
             <View>
-              <Text  style={{fontSize:20}}>{contact.username}</Text>
+              <Text  style={{fontSize:20}}>{contact.nombresyapellidos?contact.nombresyapellidos:contact.username}</Text>
             </View>
           </TouchableOpacity>
         )
@@ -80,7 +80,7 @@ class ContactosScreen extends React.Component {
               borderBottomWidth: 1, borderBottomColor: '#f4f4f4'
             }}
           >
-            <Image source={contact.avatar?contact.avatar:{uri: 'https://www.w3schools.com/w3images/avatar2.png'}} style={{
+            <Image source={contact.avatar?{uri: contact.avatar}:require('../assets/img/avatar2.png')} style={{
                 alignSelf: 'center', 
                 width: 60,
                 borderRadius: 300,
@@ -89,7 +89,7 @@ class ContactosScreen extends React.Component {
                 marginRight: 10,
             }}/>
             <View>
-              <Text  style={{fontSize:20}}>{contact.username}</Text>
+              <Text  style={{fontSize:20}}>{contact.nombresyapellidos?contact.nombresyapellidos:contact.username}</Text>
               <View style={{flexDirection:'row'}}>
                 <TouchableOpacity 
                   style={styles.button}
