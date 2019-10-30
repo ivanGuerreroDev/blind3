@@ -6,6 +6,7 @@ import LoginNavigator from './navigations/LoginNavigator';
 import { connect } from "react-redux";
 import { fetchData } from "./actions/user";
 import { recieveMessage, deleteChat } from "./actions/chats";
+var PushNotification = require("react-native-push-notification");
 const io = require('socket.io-client');
 var server = require('./config')
 
@@ -29,14 +30,34 @@ class App extends React.Component {
       
     }
   }
-  componentDidMount(){
+  async componentDidMount(){
     const aqui = this
     if(this.props.user&& this.props.user.username){
+      PushNotification.configure({
+        onRegister: function(token) {
+          console.log("TOKEN:", token);
+        },
+        onNotification: function(notification) {
+          console.log("NOTIFICATION:", notification);
+          notification.finish(PushNotificationIOS.FetchResult.NoData);
+        },
+        permissions: {
+          alert: true,
+          badge: true,
+          sound: true
+        },
+        popInitialNotification: true,
+        requestPermissions: true
+      });
       this.socket.emit('conectar',{
         username: this.props.user.username,
         timestamp: this.props.last_update
       })
       this.socket.on('mensaje', function(data){
+        PushNotification.localNotification({
+          title: data.user+' te ha enviado:',
+          message: data.text
+        })
         aqui.props.recieveMessage(data);
       }) 
       this.socket.on('actualizacion', function(data){
