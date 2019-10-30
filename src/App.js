@@ -6,9 +6,10 @@ import LoginNavigator from './navigations/LoginNavigator';
 import { connect } from "react-redux";
 import { fetchData } from "./actions/user";
 import { recieveMessage, deleteChat } from "./actions/chats";
+
 var PushNotification = require("react-native-push-notification");
 const io = require('socket.io-client');
-var server = require('./config')
+var server = require('./config');
 
 class App extends React.Component {
   constructor(props) {
@@ -54,10 +55,12 @@ class App extends React.Component {
         timestamp: this.props.last_update
       })
       this.socket.on('mensaje', function(data){
+        
         PushNotification.localNotification({
           title: data.user+' te ha enviado:',
           message: data.text
         })
+        
         aqui.props.recieveMessage(data);
       }) 
       this.socket.on('actualizacion', function(data){
