@@ -48,44 +48,10 @@ class Chat extends React.Component {
         };
       });
       return{
-        messages: state.messages
+        messages: GiftedChat.append([],state.messages)
       }
     }
     
-  }
-  componentDidMount() {
-    const aqui = this
-    if(this.props.chats&&this.props.chats[this.state.to]){
-      var mensajes = this.props.chats[this.state.to]
-      if(mensajes){
-        this._renderMensajes(mensajes);
-      }
-    }
-   
-  }
-  componentWillReceiveProps(){
-    if(this.props.chats&&this.props.chats[this.state.to]){
-      var mensajes = this.props.chats[this.state.to]
-      if(mensajes){
-        this._renderMensajes(mensajes);
-      }
-    }
-  }
-  _renderMensajes(mensajes){
-    mensajes.forEach((element, i) => {
-      var id = 1; var user = this.props.user.username;
-      if(element.user != user){ id = 2; user = this.state.to }
-      this.state.messages[i] = {
-        _id: i,
-        text: element.text,
-        createdAt: element.timestamp,
-        user:{
-          _id: id,
-          name: user,
-        }
-      };
-    });
-    this.setState({refresh: true})
   }
   onSend(messages = []) {
     var mensaje = {
@@ -135,8 +101,7 @@ class Chat extends React.Component {
   render() {
     return (
       <GiftedChat
-        inverted={false}
-        messages={this.state.messages}
+        messages={this.state.messages.reverse()}
         placeholder='Escribe un mensaje'
         onSend={messages => this.onSend(messages)}
         user={{

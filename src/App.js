@@ -40,7 +40,6 @@ class App extends React.Component {
         },
         onNotification: function(notification) {
           console.log("NOTIFICATION:", notification);
-          notification.finish(PushNotificationIOS.FetchResult.NoData);
         },
         permissions: {
           alert: true,
