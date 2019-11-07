@@ -1,43 +1,56 @@
 import React from 'react';
 import { Platform, View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import { Input } from 'react-native-elements';
-
-export default class OlvidoContrasena extends React.Component {
+import { connect } from "react-redux";
+import { setData } from "../actions/olvido";
+import Loading from '../components/Loading'
+var server = require('../config')
+class OlvidoContrasena extends React.Component {
   static navigationOptions = {
     header: null,
   };
   state= {
     error: ''
   }
+  
   render() {
-    return (
-      <View style={styles.content}>
-        
-        <Text style={{fontSize: 18, color:'#fff', marginBottom:30, textAlign:'center'}}>Ingresa su correo electronico.</Text>
-        <Text style={{fontSize: 14, color:'red'}}>{this.state.error}</Text>
-        <Input
-          placeholder='Ingrese su correo electronico'
-          inputStyle={{color:'#fff'}}
-          placeholderTextColor='#cbcbcb' 
-          onChangeText={(e)=>this.setState({correo: e})}
-        />
-        <TouchableOpacity style={[styles.button, {marginTop:20}]}
-          onPress={() => this._permission()}
-        >
-          <Text style={{fontSize: 16, color:'#333', fontWeight:'700'}}>SIGUIENTE</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={{marginTop:30}}
-          onPress={() => this.props.navigation.navigate('Login')}
-        >
-          <Text style={{fontSize: 16, color:'#fff'}}>Volver</Text>
-        </TouchableOpacity>
-      </View>
-    )
+    if(!this.state.loading){
+      return (
+        <View style={styles.content}>
+          
+          <Text style={{fontSize: 18, color:'#fff', marginBottom:30, textAlign:'center'}}>Ingresa su correo electronico.</Text>
+          <Text style={{fontSize: 14, color:'red'}}>{this.state.error}</Text>
+          <Input
+            placeholder='Ingrese su correo electronico'
+            inputStyle={{color:'#fff'}}
+            placeholderTextColor='#cbcbcb' 
+            onChangeText={(e)=>this.setState({correo: e})}
+          />
+          <TouchableOpacity style={[styles.button, {marginTop:20}]}
+            onPress={() => this._permission()}
+          >
+            <Text style={{fontSize: 16, color:'#333', fontWeight:'700'}}>SIGUIENTE</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{marginTop:30}}
+            onPress={() => this.props.navigation.navigate('Login')}
+          >
+            <Text style={{fontSize: 16, color:'#fff'}}>Volver</Text>
+          </TouchableOpacity>
+        </View>
+      )
+    }else{
+      return (
+        <View style={{flex:1}}>
+          <Loading isLoading={this.state.loading}/>
+        </View>
+      )
+    }
+    
   }
 
   _permission(){
-    this.props.screenProps._setState({loading: true})
-    return fetch('https://blind3.herokuapp.com/api/permission/', {
+    this.setState({loading: true})
+    return fetch(server.host+'/api/permission/', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -45,22 +58,22 @@ export default class OlvidoContrasena extends React.Component {
       },
       body: JSON.stringify({
         'type': 'Recovery',
-        'correo': this.state.correo,
+        'email': this.state.correo,
       }),
     }).then((response) => response.json())
     .then((responseJson) => {
-      this.props.screenProps._setState({loading: false})
+      this.setState({loading: false})
       if(responseJson.valid){
-        this.props.screenProps._setState({olvidoContrasenaCorreo: this.state.correo});
+        this.props.setData({key: 'olvidoContrasenaCorreo', value: this.state.correo})
         this.props.navigation.navigate('OlvidoContrasenaCodigo');
       }else{
         let msg = responseJson.message;
+        this.setState({loading: false})
         this.setState({error: msg})
       }
     })
     .catch((error) => {
-      this.props.screenProps._setState({loading: false})
-      console.error(error);
+      this.setState({loading: false})
     });
   }
 
@@ -83,3 +96,17 @@ const styles = StyleSheet.create({
     borderRadius: 10   
   }
 });
+
+function bindAction(dispatch) {
+  return {
+    setData: data => dispatch(setData(data))
+  };
+}
+
+const mapStateToProps = state => ({
+  olvido: state.olvidoReducer.data
+});
+export default connect(
+  mapStateToProps,
+  bindAction
+)(OlvidoContrasena);

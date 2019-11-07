@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Text, View,ScrollView,StyleSheet, Image, TouchableOpacity} from 'react-native';
+import { Text, View,ScrollView,StyleSheet, Image, TouchableOpacity, Alert} from 'react-native';
 import AddContactButton from '../components/AddContactButton'
 import { connect } from "react-redux";
 import { fetchDataSuccess, fetchDataRequest, fetchDataError } from "../actions/user";
@@ -48,6 +48,17 @@ class ContactosScreen extends React.Component {
               borderBottomWidth: 1, borderBottomColor: '#f4f4f4'
             }}
             onPress={() => this.props.screenProps._goChat(contact.username)}
+            onLongPress={()=>{
+              Alert.alert('¿Deseas eliminar contacto?','',
+                  [
+                    {text: 'Si', onPress: () => {
+                      this.deleteFriend(contact.username)
+                    }},
+                    {text: 'No',style: 'cancel',},
+                  ],
+                    {cancelable: true},
+                  );
+            }}
           >
             <Image source={contact.avatar?{uri: contact.avatar}:require('../assets/img/avatar2.png')} style={{
                 alignSelf: 'center', 
@@ -153,7 +164,25 @@ class ContactosScreen extends React.Component {
     });
 
   }
-
+  deleteFriend(friend){
+    fetch(server.host+'/api/removeFriend/', {
+      method: 'POST', 
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        'username': this.props.user.username,
+        'friend': friend
+      }),
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if(responseJson.success){
+        this._refresh();
+      }
+    });
+  }
   _refresh(){
     var aqui = this;
     fetch(server.host+'/api/friendRequests/', {
