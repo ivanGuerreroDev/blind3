@@ -9,6 +9,7 @@ import { connect } from "react-redux";
 import { fetchDataSuccess, fetchDataRequest, fetchDataError } from "./actions/user";
 import { addMessage, recieveMessage } from "./actions/chats";
 import moment from 'moment';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 const io = require('socket.io-client');
 var server = require('./config')
 
@@ -17,7 +18,8 @@ class Chat extends React.Component {
     super(props);
     const { navigation } = this.props; 
     this.state = {
-      messages: [],
+      messages: [
+      ],
       to: navigation.getParam('username')
     };
     
@@ -53,15 +55,8 @@ class Chat extends React.Component {
     }
     
   }
+  
   onSend(messages = []) {
-    var mensaje = {
-      text: messages[0].text,
-      user: this.props.user.username,
-      to: this.state.to,
-      timestamp: moment().utc().valueOf()
-    };
-    this.props.addMessage(mensaje)
-    this.props.screenProps.sendMessage(mensaje);
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }))
@@ -100,16 +95,21 @@ class Chat extends React.Component {
 
   render() {
     return (
-      <GiftedChat
-        messages={this.state.messages.reverse()}
-        placeholder='Escribe un mensaje'
-        onSend={messages => this.onSend(messages)}
-        user={{
-          _id: 1
-        }}
-        //renderMessage={this.renderMessage}
-        renderSend={this.renderSend}
-      />
+      <Container>
+        <Content>
+          <GiftedChat
+            messages={this.state.messages.reverse()}
+            placeholder='Escribe un mensaje'
+            onSend={messages => this.onSend(messages)}
+            user={{
+              _id: 1
+            }}
+            //renderMessage={this.renderMessage}
+            renderSend={this.renderSend}
+          />
+          {Platform.OS === 'android' ? <KeyboardSpacer /> : null }
+        </Content>
+      </Container>
     );
   }
 
