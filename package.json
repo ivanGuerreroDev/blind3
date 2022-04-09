@@ -16,7 +16,7 @@
     "emoji-utils": "^1.0.1",
     "form-data": "^2.5.1",
     "jetifier": "^1.6.3",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.26",
     "prop-types": "^15.7.2",
     "react": "16.8.6",
